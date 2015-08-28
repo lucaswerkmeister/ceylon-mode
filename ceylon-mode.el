@@ -55,6 +55,15 @@
 
 (defvar ceylon-mode-syntax-table
   (let ((st (make-syntax-table)))
+    ;; Comments. DO NOT LOOK UP HOW THIS WORKS, it's horrifying. (elisp.info node "Syntax Flags" if you're masochistic.)
+    ;; It works, and we'll never have to touch it again. That's enough.
+    ;; Note: this also recognizes '/!' and '#/' as line comments. That's how shitty this system is. Can't be fixed.
+    ;; Doesn't matter, since '/!' and '#!' isn't legal Ceylon anyways.
+    (modify-syntax-entry ?/ ". 124" st)
+    (modify-syntax-entry ?* ". 23n" st)
+    (modify-syntax-entry ?\n ">" st)
+    (modify-syntax-entry ?# ". 1" st)
+    (modify-syntax-entry ?! ". 2" st)
     st)
   "Syntax table for ceylon-mode")
 
