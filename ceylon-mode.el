@@ -76,6 +76,40 @@
     st)
   "Syntax table for ceylon-mode")
 
+(set-default 'tab-width 4)
+(defun ceylon-indent-line ()
+  "Indent current line as Ceylon code"
+  (beginning-of-line)
+  (if (bobp) ; beginning of buffer?
+      (indent-line-to 0)
+    (let (cur-indent)
+      (save-excursion
+        (forward-line -1)
+        (setq cur-indent (current-indentation))
+        (let* ((start (line-beginning-position))
+               (end   (line-end-position))
+               (line (buffer-substring-no-properties start end))
+               (open-parens    (count ?\( line))
+               (close-parens   (count ?\) line))
+               (open-braces    (count ?{  line))
+               (close-braces   (count ?}  line))
+               (open-brackets  (count ?\[ line))
+               (close-brackets (count ?\] line))
+               (balance (- (+ open-parens open-braces open-brackets)
+                           (+ close-parens close-braces close-brackets))))
+          (setq cur-indent (+ cur-indent (* balance tab-width)))
+          (forward-line 1)
+          (if (looking-at "[ \t]*\\(}\\|)\\|]\\)")
+              (setq cur-indent (- cur-indent tab-width)))))
+      (if (>= cur-indent 0)
+          (indent-line-to cur-indent)))))
+;; uncomment this to automatically reindent when a close-brace is typed;
+;; however, this also sets the cursor *before* that brace, which is inconvenient,
+;; so it's disabled for now.
+;;(setq electric-indent-chars
+;;  (append electric-indent-chars
+;;          '(?})))
+
 (defun ceylon-mode ()
   "Major mode for editing Ceylon"
   (interactive)
@@ -83,7 +117,7 @@
   (set-syntax-table ceylon-mode-syntax-table)
   (use-local-map ceylon-mode-map)
   (set (make-local-variable 'font-lock-defaults) '(ceylon-font-lock))
-  ;; TODO set indent function
+  (set (make-local-variable 'indent-line-function) 'ceylon-indent-line)
   (setq major-mode 'ceylon-mode)
   (setq mode-name "Ceylon")
   (run-hooks 'ceylon-mode-hook))
