@@ -53,12 +53,16 @@
 (defvar ceylon-font-lock ceylon-font-lock-all ; e. g. set to ceylon-font-lock-keywords to only highlight keywords
   "Syntax highlighting for Ceylon; customizable (highlights all by default)")
 
+(defvar ceylon-mode-syntax-table
+  (let ((st (make-syntax-table)))
+    st)
+  "Syntax table for ceylon-mode")
 
 (defun ceylon-mode ()
   "Major mode for editing Ceylon"
   (interactive)
   (kill-all-local-variables)
-  ;; TODO set syntax table
+  (set-syntax-table ceylon-mode-syntax-table)
   (use-local-map ceylon-mode-map)
   (set (make-local-variable 'font-lock-defaults) '(ceylon-font-lock))
   ;; TODO set indent function
