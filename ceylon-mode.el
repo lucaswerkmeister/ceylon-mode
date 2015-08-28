@@ -11,6 +11,13 @@
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
+(defconst ceylon-font-lock-string
+  (list
+   ;; highlighting strings with regexes, because Emacs' proper model (syntax table) isn't flexible enough to suppport string templates or verbatim strings
+   '("\\(\"\"\"\\(?:[^\"]\\|\"[^\"]\\|\"\"[^\"]\\)*\"\"\"\\)" . font-lock-string-face) ; verbatim string literal
+   '("\\(\\(?:\"\\|``\\)\\(?:`\\(?:[^`\"\\]\\|\\\\.\\)\\|[^`\"\\]\\|\\\\.\\)*\\(?:\"\\|``\\)\\)" . font-lock-string-face) ; string literal or string part
+   '("\\('\\(?:[^'\\]\\|\\\\.\\)*'\\)" . font-lock-string-face)) ; character literal
+  "Syntax highlighting for Ceylon strings")
 ;; optimized regular expressions
 ;; don't forget to add \\< \\> around the regexp
 ;;(regexp-opt '("assembly" "module" "package" "import"
@@ -48,7 +55,7 @@
    '("\\<\\(\\\\I[[:alnum:]]*\\)\\>" . font-lock-type-face))
   "Syntax highlighting for Ceylon uppercase identifiers")
 (defconst ceylon-font-lock-all
-  (concatenate 'list ceylon-font-lock-keywords ceylon-font-lock-language-annos ceylon-font-lock-doc-annos ceylon-font-lock-lidentifier ceylon-font-lock-uidentifier)
+  (concatenate 'list ceylon-font-lock-string ceylon-font-lock-keywords ceylon-font-lock-language-annos ceylon-font-lock-doc-annos ceylon-font-lock-lidentifier ceylon-font-lock-uidentifier)
   "Syntax highlighting for all Ceylon elements")
 (defvar ceylon-font-lock ceylon-font-lock-all ; e. g. set to ceylon-font-lock-keywords to only highlight keywords
   "Syntax highlighting for Ceylon; customizable (highlights all by default)")
@@ -64,6 +71,8 @@
     (modify-syntax-entry ?\n ">" st)
     (modify-syntax-entry ?# ". 1" st)
     (modify-syntax-entry ?! ". 2" st)
+    ;; Disable string highlighting so that the regexes in ceylon-font-lock-string can match
+    (modify-syntax-entry ?\" "." st)
     st)
   "Syntax table for ceylon-mode")
 
