@@ -124,6 +124,8 @@
                (close-brackets (count ?\] line))
                (balance (- (+ open-parens open-braces open-brackets)
                            (+ close-parens close-braces close-brackets))))
+          (if (looking-at"[ \t]*\\(}\\|)\\|]\\)")
+              (setq balance (+ balance 1)))
           (setq cur-indent (+ cur-indent (* balance tab-width)))))
       (if (looking-at "[ \t]*\\(}\\|)\\|]\\)")
           (setq cur-indent (- cur-indent tab-width)))
