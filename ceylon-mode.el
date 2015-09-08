@@ -110,7 +110,7 @@
     (let (cur-indent)
       (save-excursion
         (forward-line -1)
-        (while (looking-at "^[ \t]*$") ; skip over blank lines
+        (while (and (looking-at "^[ \t]*$") (not (bobp))) ; skip over blank lines
           (forward-line -1))
         (setq cur-indent (current-indentation))
         (let* ((start (line-beginning-position))
