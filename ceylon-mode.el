@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'cl)
+
 (defvar ceylon-mode-hook nil)
 
 (defvar ceylon-mode-map
