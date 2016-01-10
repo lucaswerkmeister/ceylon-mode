@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'cl)
-
 (defvar ceylon-mode-hook nil)
 
 (defvar ceylon-mode-map
@@ -82,7 +80,7 @@
    '("\\<\\(\\\\I[[:alnum:]_]*\\)\\>" . font-lock-type-face))
   "Syntax highlighting for Ceylon uppercase identifiers.")
 (defconst ceylon-font-lock-all
-  (concatenate 'list ceylon-font-lock-string ceylon-font-lock-keywords ceylon-font-lock-language-annos ceylon-font-lock-doc-annos ceylon-font-lock-lidentifier ceylon-font-lock-uidentifier)
+  (append ceylon-font-lock-string ceylon-font-lock-keywords ceylon-font-lock-language-annos ceylon-font-lock-doc-annos ceylon-font-lock-lidentifier ceylon-font-lock-uidentifier)
   "Syntax highlighting for all Ceylon elements.")
 (defvar ceylon-font-lock ceylon-font-lock-all ; e. g. set to ceylon-font-lock-keywords to only highlight keywords
   "Syntax highlighting for Ceylon; customizable (highlights all by default).")
