@@ -1,6 +1,6 @@
 ;;; ceylon-mode.el --- Major mode for editing Ceylon source code
 
-;;; Copyright (C) 2015 Lucas Werkmeister
+;;; Copyright (C) 2015-2016 Lucas Werkmeister
 
 ;; Author: Lucas Werkmeister <mail@lucaswerkmeister.de>
 
