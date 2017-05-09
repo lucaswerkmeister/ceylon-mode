@@ -3,6 +3,12 @@ ceylon-mode
 
 A major [Emacs] mode for editing [Ceylon] code.
 
+Current status
+--------------
+
+It doesn’t do much, but it works well enough for me.
+I don’t have much time to improve it, but pull requests are always welcome.
+
 Features
 --------
 
