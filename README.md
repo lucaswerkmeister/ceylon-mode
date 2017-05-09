@@ -15,6 +15,18 @@ Features
 - Syntax highlighting
 - Rudimentary indentation
 
+Usage
+-----
+
+Drop the `ceylon-mode.el` somewhere and include it from your `~/.emacs`, e. g. like this:
+
+```elisp
+(load-file "~/git/ceylon/ceylon-mode/ceylon-mode.el")
+```
+
+`ceylon-mode.el` automatically sets itself up to become the default mode for `*.ceylon` files;
+you can also explicitly activate it with `M-x ceylon-mode`.
+
 Related projects
 ----------------
 
