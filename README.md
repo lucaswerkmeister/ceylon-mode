@@ -9,6 +9,11 @@ Features
 - Syntax highlighting
 - Rudimentary indentation
 
+Related projects
+----------------
+
+[bck39/ceylon-mode] is another Ceylon mode for Emacs.
+
 License
 -------
 
@@ -18,3 +23,4 @@ By submitting a "pull request" or otherwise contributing to this repository, you
 
 [Emacs]: https://www.gnu.org/software/emacs/
 [Ceylon]: https://ceylon-lang.org/
+[bck39/ceylon-mode]: https://github.com/bkc39/ceylon-mode
