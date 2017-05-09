@@ -17,4 +17,4 @@ The content of this repository is released under the GPL v3 or later, as provide
 By submitting a "pull request" or otherwise contributing to this repository, you agree to license your contribution under the license mentioned above.
 
 [Emacs]: https://www.gnu.org/software/emacs/
-[Ceylon]: http://ceylon-lang.org/
+[Ceylon]: https://ceylon-lang.org/
