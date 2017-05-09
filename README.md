@@ -1,7 +1,7 @@
 ceylon-mode
 ===========
 
-A major [Emacs][] mode for editing [Ceylon][] code.
+A major [Emacs] mode for editing [Ceylon] code.
 
 Features
 --------
