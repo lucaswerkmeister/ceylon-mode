@@ -156,6 +156,8 @@ complete declarations."
   ;; remember initial indentation of the code (`ceylon format --pipe` always uses initial indentation 0)
   (goto-char region-beginning)
   (setq initial-indentation (current-indentation))
+  ;; remember column of the first line (its initial indentation might be partially within and partially outside of region)
+  (setq first-line-column (current-column))
   ;; pipe region through ceylon.formatter
   (shell-command-on-region region-beginning region-end "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
   ;; remember updated region
@@ -166,8 +168,11 @@ complete declarations."
   (if (> initial-indentation 0)
       (dotimes (n lines)
         (beginning-of-line)
-        (indent-to-column initial-indentation)
-        (setq region-end (+ region-end initial-indentation))
+        (setq adjustment (if (eq n 0)
+                             (- initial-indentation first-line-column) ; part of first line's indentation is outside region and wasn't removed
+                           initial-indentation))
+        (indent-to-column adjustment)
+        (setq region-end (+ region-end adjustment))
         (forward-line 1)))
   ;; ceylon.formatter always adds trailing newline, remove if not present before
   (when (not newline-at-end)
