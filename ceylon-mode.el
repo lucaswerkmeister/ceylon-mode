@@ -155,11 +155,14 @@ complete declarations."
   (setq newline-at-end (eq (point) (line-beginning-position)))
   ;; pipe region through ceylon.formatter
   (shell-command-on-region region-beginning region-end "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
-  ;; note: after this command, always use (region-beginning/end) instead of region-beginning/end because region was updated
+  ;; remember updated region
+  (setq region-beginning (region-beginning)
+        region-end (region-end)
+        lines (count-lines region-beginning region-end))
   ;; shell-command-on-region places point at beginning of region, move to end if it was there before formatting
-  (if point-at-end (goto-char (region-end)))
+  (if point-at-end (goto-char region-end))
   ;; ceylon.formatter always adds trailing newline, remove if not present before
-  (if (not newline-at-end) (delete-region (- (region-end) 1) (region-end))))
+  (if (not newline-at-end) (delete-region (- region-end 1) region-end)))
 
 (define-key mode-specific-map "\C-f" 'ceylon-format-region)
 
