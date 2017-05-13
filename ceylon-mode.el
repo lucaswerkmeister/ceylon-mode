@@ -27,12 +27,6 @@
 
 (defvar ceylon-mode-hook nil)
 
-(defvar ceylon-mode-map
-  (let ((map (make-keymap)))
-;;   (define-key map "\C-j" 'newline-and-indent)
-    map)
-  "Keymap for Ceylon major mode.")
-
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
@@ -201,10 +195,17 @@ and `ceylon-format-buffer' otherwise."
       (ceylon-format-region)
     (ceylon-format-buffer)))
 
-(define-key mode-specific-map "\C-f" 'ceylon-format-region-or-buffer)
+(defvar ceylon-mode-map
+  (let ((map (make-keymap)))
+;;   (define-key map "\C-j" 'newline-and-indent)
+    (define-key map "\C-c\C-f" 'ceylon-format-region-or-buffer)
+    map)
+  "Keymap for Ceylon major mode.")
 
 (defun ceylon-mode ()
-  "Major mode for editing Ceylon code."
+  "Major mode for editing Ceylon code.
+
+\\{ceylon-mode-map}"
   (interactive)
   (kill-all-local-variables)
   (set-syntax-table ceylon-mode-syntax-table)
