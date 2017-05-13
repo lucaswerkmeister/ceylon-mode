@@ -144,7 +144,12 @@ The region must contain code that looks like a compilation unit
 so that `ceylon.formatter' can parse it, usually one or more
 complete declarations."
   (interactive)
-  (shell-command-on-region (region-beginning) (region-end) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t))
+  ;; remember whether point was at beginning or end of region before formatting
+  (setq point-at-end (eq (point) (region-end)))
+  ;; pipe region through ceylon.formatter
+  (shell-command-on-region (region-beginning) (region-end) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+  ;; shell-command-on-region places point at beginning of region, move to end if it was there before formatting
+  (if point-at-end (goto-char (region-end))))
 
 (define-key mode-specific-map "\C-f" 'ceylon-format-region)
 
