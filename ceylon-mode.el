@@ -137,6 +137,17 @@
 ;;  (append electric-indent-chars
 ;;          '(?})))
 
+(defun ceylon-format-region ()
+  "Format the current region with `ceylon format'.
+
+The region must contain code that looks like a compilation unit
+so that `ceylon.formatter' can parse it, usually one or more
+complete declarations."
+  (interactive)
+  (shell-command-on-region (region-beginning) (region-end) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t))
+
+(define-key mode-specific-map "\C-f" 'ceylon-format-region)
+
 (defun ceylon-mode ()
   "Major mode for editing Ceylon code."
   (interactive)
