@@ -145,12 +145,17 @@ so that `ceylon.formatter' can parse it, usually one or more
 complete declarations."
   (interactive)
   (setq
+   ;; remember region before we start moving point
+   region-beginning (region-beginning)
+   region-end (region-end)
    ;; remember whether point was at beginning or end of region before formatting
-   point-at-end (eq (point) (region-end))
-   ;; remember whether region had trailing newline before formatting
-   newline-at-end (member (char-before (region-end)) (list ?\n ?\r)))
+   point-at-end (eq (point) (region-end)))
+  ;; remember whether region had trailing newline before formatting
+  (goto-char region-end)
+  (setq newline-at-end (eq (point) (line-beginning-position)))
   ;; pipe region through ceylon.formatter
-  (shell-command-on-region (region-beginning) (region-end) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+  (shell-command-on-region region-beginning region-end "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+  ;; note: after this command, always use (region-beginning/end) instead of region-beginning/end because region was updated
   ;; shell-command-on-region places point at beginning of region, move to end if it was there before formatting
   (if point-at-end (goto-char (region-end)))
   ;; ceylon.formatter always adds trailing newline, remove if not present before
