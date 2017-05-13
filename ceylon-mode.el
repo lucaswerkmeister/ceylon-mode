@@ -181,7 +181,27 @@ complete declarations."
   ;; move to region beginning or end, depending on which one was point before formatting
   (goto-char (if point-at-end region-end region-beginning)))
 
-(define-key mode-specific-map "\C-f" 'ceylon-format-region)
+(defun ceylon-format-buffer ()
+  "Format the current buffer with `ceylon format'."
+  (interactive)
+  ;; save point
+  (setq point (point))
+  ;; pipe buffer through ceylon.formatter
+  (shell-command-on-region (point-min) (point-max) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+  ;; restore point (it won't be in the same logical code position, but it's better than nothing)
+  (goto-char point))
+
+(defun ceylon-format-region-or-buffer ()
+  "Format the current region or buffer with `ceylon format'.
+
+Runs `ceylon-format-region' if there is a region
+and `ceylon-format-buffer' otherwise."
+  (interactive)
+  (if (use-region-p)
+      (ceylon-format-region)
+    (ceylon-format-buffer)))
+
+(define-key mode-specific-map "\C-f" 'ceylon-format-region-or-buffer)
 
 (defun ceylon-mode ()
   "Major mode for editing Ceylon code."
