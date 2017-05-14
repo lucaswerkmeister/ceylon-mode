@@ -138,52 +138,53 @@ The region must contain code that looks like a compilation unit
 so that `ceylon.formatter' can parse it, usually one or more
 complete declarations."
   (interactive)
-  (setq
-   ;; remember region before we start moving point
-   region-beginning (region-beginning)
-   region-end (region-end)
-   ;; remember whether point was at beginning or end of region before formatting
-   point-at-end (eq (point) (region-end)))
-  ;; remember whether region had trailing newline before formatting
-  (goto-char region-end)
-  (setq newline-at-end (eq (point) (line-beginning-position)))
-  ;; remember initial indentation of the code (`ceylon format --pipe` always uses initial indentation 0)
-  (goto-char region-beginning)
-  (setq initial-indentation (current-indentation))
-  ;; remember column of the first line (its initial indentation might be partially within and partially outside of region)
-  (setq first-line-column (current-column))
-  ;; pipe region through ceylon.formatter
-  (shell-command-on-region region-beginning region-end "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
-  ;; remember updated region
-  (setq region-beginning (region-beginning)
-        region-end (region-end)
-        lines (count-lines region-beginning region-end))
-  ;; `ceylon format --pipe` always uses initial indentation 0, indent all lines to remembered initial indentation
-  (if (> initial-indentation 0)
-      (dotimes (n lines)
-        (beginning-of-line)
-        (setq adjustment (if (eq n 0)
-                             (- initial-indentation first-line-column) ; part of first line's indentation is outside region and wasn't removed
-                           initial-indentation))
-        (indent-to-column adjustment)
-        (setq region-end (+ region-end adjustment))
-        (forward-line 1)))
-  ;; ceylon.formatter always adds trailing newline, remove if not present before
-  (when (not newline-at-end)
-    (delete-region (- region-end 1) region-end)
-    (setq region-end (- region-end 1)))
-  ;; move to region beginning or end, depending on which one was point before formatting
-  (goto-char (if point-at-end region-end region-beginning)))
+  (let* (;; remember region before we start moving point
+         (region-beginning (region-beginning))
+         (region-end (region-end))
+         ;; remember whether point was at beginning or end of region before formatting
+         (point-at-end (eq (point) region-end))
+         ;; remember whether region had trailing newline before formatting
+         (newline-at-end (progn (goto-char region-end)
+                                (eq (point) (line-beginning-position))))
+         ;; remember initial indentation of the code (`ceylon format --pipe` always uses initial indentation 0)
+         (initial-indentation (progn (goto-char region-beginning)
+                                     (current-indentation)))
+         ;; remember column of the first line (its initial indentation might be partially within and partially outside of region)
+         (first-line-column (current-column))
+         ;; declare local variable for use below
+         lines)
+    ;; pipe region through ceylon.formatter
+    (shell-command-on-region region-beginning region-end "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+    ;; remember updated region
+    (setq region-beginning (region-beginning)
+          region-end (region-end)
+          lines (count-lines region-beginning region-end))
+    ;; `ceylon format --pipe` always uses initial indentation 0, indent all lines to remembered initial indentation
+    (if (> initial-indentation 0)
+        (dotimes (n lines)
+          (beginning-of-line)
+          (let ((adjustment (if (eq n 0)
+                                (- initial-indentation first-line-column) ; part of first line's indentation is outside region and wasn't removed
+                              initial-indentation)))
+            (indent-to-column adjustment)
+            (setq region-end (+ region-end adjustment)))
+          (forward-line 1)))
+    ;; ceylon.formatter always adds trailing newline, remove if not present before
+    (when (not newline-at-end)
+      (delete-region (- region-end 1) region-end)
+      (setq region-end (- region-end 1)))
+    ;; move to region beginning or end, depending on which one was point before formatting
+    (goto-char (if point-at-end region-end region-beginning))))
 
 (defun ceylon-format-buffer ()
   "Format the current buffer with `ceylon format'."
   (interactive)
   ;; save point
-  (setq point (point))
-  ;; pipe buffer through ceylon.formatter
-  (shell-command-on-region (point-min) (point-max) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
-  ;; restore point (it won't be in the same logical code position, but it's better than nothing)
-  (goto-char point))
+  (let ((point (point)))
+    ;; pipe buffer through ceylon.formatter
+    (shell-command-on-region (point-min) (point-max) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+    ;; restore point (it won't be in the same logical code position, but it's better than nothing)
+    (goto-char point)))
 
 (defun ceylon-format-region-or-buffer ()
   "Format the current region or buffer with `ceylon format'.
