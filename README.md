@@ -16,20 +16,25 @@ Features
 - Rudimentary indentation
 - Code formatting using [ceylon.formatter] (`C-c C-f`)
 
-Usage
------
+Installation
+------------
 
-Drop the `ceylon-mode.el` somewhere and include it from your `~/.emacs`, e. g. like this:
+Clone the repository somewhere.
+Open Emacs, and run `M-x package-install-file`.
+Enter the path to `ceylon-mode.el` and hit Enter.
 
-```elisp
-(load-file "~/git/ceylon/ceylon-mode/ceylon-mode.el")
-```
-
-`ceylon-mode.el` automatically sets itself up to become the default mode for `*.ceylon` files;
-you can also explicitly activate it with `M-x ceylon-mode`.
+We plan to make ceylon-mode available on MELPA soon.
 
 The code formatting functions require the `ceylon format` plugin,
 which is usually bundled with the Ceylon distribution.
+
+Usage
+-----
+
+The package automatically sets itself up to become the default mode for `*.ceylon` files;
+you can also explicitly trigger Ceylon mode with `M-x ceylon-mode`.
+
+You can view the full mode documentation with `C-h f ceylon-mode`.
 
 Related projects
 ----------------

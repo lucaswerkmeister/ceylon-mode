@@ -1,8 +1,11 @@
 ;;; ceylon-mode.el --- Major mode for editing Ceylon source code
 
-;;; Copyright (C) 2015-2016 Lucas Werkmeister
+;; Copyright (C) 2015-2017 Lucas Werkmeister
 
 ;; Author: Lucas Werkmeister <mail@lucaswerkmeister.de>
+;; URL: https://github.com/lucaswerkmeister/ceylon-mode
+;; Keywords: languages ceylon
+;; Version: 0.1
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,9 +29,6 @@
 ;;; Code:
 
 (defvar ceylon-mode-hook nil)
-
-;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
 (defconst ceylon-font-lock-string
   (list
@@ -203,6 +203,8 @@ and `ceylon-format-buffer' otherwise."
     map)
   "Keymap for Ceylon major mode.")
 
+;;;###autoload (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
+;;;###autoload
 (defun ceylon-mode ()
   "Major mode for editing Ceylon code.
 
