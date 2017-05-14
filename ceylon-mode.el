@@ -21,10 +21,11 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;
+
 ;; Features:
 ;; * syntax highlighting
 ;; * indentation
+;; * code formatting
 
 ;;; Code:
 
