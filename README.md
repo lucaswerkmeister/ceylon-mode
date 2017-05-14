@@ -6,8 +6,9 @@ A major [Emacs] mode for editing [Ceylon] code.
 Current status
 --------------
 
-It doesn’t do much, but it works well enough for me.
-I don’t have much time to improve it, but pull requests are always welcome.
+A first version has been released and is good enough for general use in my opinion.
+Development from my side will continue on an on-and-off basis as I find the time to work on it;
+pull requests are always welcome!
 
 Features
 --------
