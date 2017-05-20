@@ -6,17 +6,18 @@
 ;; URL: https://github.com/lucaswerkmeister/ceylon-mode
 ;; Keywords: languages ceylon
 ;; Version: 0.1
+;; Package-Requires: ((emacs "24"))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
 ;; (at your option) any later version.
-;; 
+;;
 ;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -28,8 +29,6 @@
 ;; * code formatting
 
 ;;; Code:
-
-(defvar ceylon-mode-hook nil)
 
 (defconst ceylon-font-lock-string
   (list
@@ -195,28 +194,19 @@ and `ceylon-format-buffer' otherwise."
       (ceylon-format-region)
     (ceylon-format-buffer)))
 
-(defvar ceylon-mode-map
-  (let ((map (make-keymap)))
-;;   (define-key map "\C-j" 'newline-and-indent)
-    (define-key map "\C-c\C-f" 'ceylon-format-region-or-buffer)
-    map)
-  "Keymap for Ceylon major mode.")
-
 ;;;###autoload (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
+
 ;;;###autoload
-(defun ceylon-mode ()
+(define-derived-mode ceylon-mode prog-mode "Ceylon"
   "Major mode for editing Ceylon code.
 
 \\{ceylon-mode-map}"
-  (interactive)
-  (kill-all-local-variables)
-  (set-syntax-table ceylon-mode-syntax-table)
-  (use-local-map ceylon-mode-map)
   (set (make-local-variable 'font-lock-defaults) '(ceylon-font-lock))
-  (set (make-local-variable 'indent-line-function) 'ceylon-indent-line)
-  (setq major-mode 'ceylon-mode)
-  (setq mode-name "Ceylon")
-  (run-hooks 'ceylon-mode-hook))
+  (set (make-local-variable 'indent-line-function) 'ceylon-indent-line))
+
+
+(define-key ceylon-mode-map "\C-c\C-f" 'ceylon-format-region-or-buffer)
+
 
 (provide 'ceylon-mode)
 
