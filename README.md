@@ -1,6 +1,9 @@
 ceylon-mode
 ===========
 
+[![MELPA](https://www.melpa.org/packages/ceylon-mode-badge.svg)](https://www.melpa.org/#/ceylon-mode)
+[![MELPA Stable](https://stable.melpa.org/packages/ceylon-mode-badge.svg)](https://stable.melpa.org/#/ceylon-mode)
+
 A major [Emacs] mode for editing [Ceylon] code.
 
 Current status
@@ -20,11 +23,17 @@ Features
 Installation
 ------------
 
-Clone the repository somewhere.
-Open Emacs, and run `M-x package-install-file`.
-Enter the path to `ceylon-mode.el` and hit Enter.
+The `ceylon-mode` package is available on MELPA;
+if you have MELPA set up locally, you can run:
+```
+M-x package-refresh-contents
+M-x package-install ceylon-mode
+```
 
-We plan to make ceylon-mode available on MELPA soon.
+To install the package from source,
+clone the repository somewhere,
+open Emacs, run `M-x package-install-file`,
+enter the path to `ceylon-mode.el` and hit Enter.
 
 The code formatting functions require the `ceylon format` plugin,
 which is usually bundled with the Ceylon distribution.
