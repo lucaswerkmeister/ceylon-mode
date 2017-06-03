@@ -38,7 +38,7 @@
    '("\\('\\(?:[^'\\]\\|\\\\.\\)*'\\)" . font-lock-string-face)) ; character literal
   "Syntax highlighting for Ceylon strings.")
 ;; optimized regular expressions
-;; don't forget to add \\< \\> around the regexp
+;; kill old value, copy regexp-opt expression (C-Space, select, M-w), move point to location of old value, C-u M-: C-y
 ;;(regexp-opt '("assembly" "module" "package" "import"
 ;;              "alias" "class" "interface" "object" "given" "value" "assign" "void" "function" "new"
 ;;              "of" "extends" "satisfies" "abstracts"
@@ -48,17 +48,17 @@
 ;;              "if" "else" "switch" "case" "for" "while" "try" "catch" "finally" "then" "let"
 ;;              "this" "outer" "super"
 ;;              "is" "exists" "nonempty"
-;;              ) t)
+;;              ) 'words)
 (defconst ceylon-font-lock-keywords
   (list
    '("\\<\\(a\\(?:bstracts\\|lias\\|ss\\(?:e\\(?:mbly\\|rt\\)\\|ign\\)\\)\\|break\\|c\\(?:a\\(?:se\\|tch\\)\\|lass\\|ontinue\\)\\|dynamic\\|e\\(?:lse\\|x\\(?:\\(?:ist\\|tend\\)s\\)\\)\\|f\\(?:inally\\|or\\|unction\\)\\|given\\|i\\(?:mport\\|nterface\\|[fns]\\)\\|let\\|module\\|n\\(?:ew\\|onempty\\)\\|o\\(?:bject\\|f\\|ut\\(?:er\\)?\\)\\|package\\|return\\|s\\(?:atisfies\\|uper\\|witch\\)\\|t\\(?:h\\(?:en\\|is\\|row\\)\\|ry\\)\\|v\\(?:alue\\|oid\\)\\|while\\)\\>" . font-lock-keyword-face))
   "Syntax highlighting for Ceylon keywords.")
-;; (regexp-opt '("shared" "abstract" "formal" "default" "actual" "variable" "late" "native" "deprecated" "final" "sealed" "annotation" "suppressWarnings" "small" "static") t)
+;; (regexp-opt '("shared" "abstract" "formal" "default" "actual" "variable" "late" "native" "deprecated" "final" "sealed" "annotation" "suppressWarnings" "small" "static") 'words)
 (defconst ceylon-font-lock-language-annos
   (list
    '("\\<\\(a\\(?:bstract\\|ctual\\|nnotation\\)\\|de\\(?:fault\\|precated\\)\\|f\\(?:\\(?:in\\|orm\\)al\\)\\|late\\|native\\|s\\(?:ealed\\|hared\\|mall\\|tatic\\|uppressWarnings\\)\\|variable\\)\\>" . font-lock-builtin-face))
   "Syntax highlighting for Ceylon language annotations.")
-;; (regexp-opt '("doc" "by" "license" "see" "throws" "tagged") t)
+;; (regexp-opt '("doc" "by" "license" "see" "throws" "tagged") 'words)
 (defconst ceylon-font-lock-doc-annos
   (list
    '("\\<\\(by\\|doc\\|license\\|see\\|t\\(?:agged\\|hrows\\)\\)\\>" . font-lock-builtin-face))
