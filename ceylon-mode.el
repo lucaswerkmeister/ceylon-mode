@@ -194,6 +194,50 @@ and `ceylon-format-buffer' otherwise."
       (ceylon-format-region)
     (ceylon-format-buffer)))
 
+(defun ceylon-source-directory (&optional path)
+  "Locate the Ceylon source code directory.
+
+Optional argument PATH describes the location to start the search
+at and defaults to the current directory."
+  ;; locate module.ceylon file
+  (let ((module-directory (locate-dominating-file (or path ".") "module.ceylon"))
+        ;; declare local variables for use below
+        module-name module-name-parts source-directory)
+    (when module-directory
+      ;; parse module name from module.ceylon
+      (with-temp-buffer
+        (insert-file-contents (concat module-directory "module.ceylon"))
+        (re-search-forward "\\_<module\\_>\\s-*\\(\\(?:\\w\\|\\s_\\)+\\(?:\\.\\(?:\\w\\|\\s_\\)+\\)*\\)" nil t)
+        (setq module-name (match-string 1)))
+      ;; strip module name parts from directory in reverse order
+      (when module-name
+        (setq module-name-parts (reverse (split-string module-name "\\.")))
+        (setq source-directory module-directory)
+        (while (and module-name-parts (string-equal
+                                       (car module-name-parts)
+                                       (file-name-nondirectory (directory-file-name source-directory))))
+          (setq module-name-parts (cdr module-name-parts))
+          (setq source-directory (file-name-directory (directory-file-name source-directory))))
+        ;; if loop didn’t terminate prematurely, directory structure was sound and we can return the result
+        (when (not module-name-parts) source-directory)))))
+
+(defun ceylon-project-directory (&optional path)
+  "Locate the Ceylon main project directory.
+
+Optional argument PATH describes the location to start the search
+at and defaults to the current directory."
+  ;; locate .ceylon/config file
+  (unless path (setq path "."))
+  (let* ((ceylon-config-path (concat (file-name-as-directory ".ceylon") "config"))
+         (project-directory (locate-dominating-file path ceylon-config-path)))
+    (if project-directory
+        ;; if it exists, it defines the project directory
+        project-directory
+      ;; otherwise, assume that source directory is one level below project directory
+      (let ((source-directory (ceylon-source-directory path)))
+        (when source-directory
+          (file-name-directory (directory-file-name source-directory)))))))
+
 ;;;###autoload (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
 ;;;###autoload
