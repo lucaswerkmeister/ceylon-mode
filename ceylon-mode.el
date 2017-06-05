@@ -263,6 +263,15 @@ for ‘module.ceylon’ at and defaults to the current directory."
     (when native-annotation
       (split-string native-annotation "\"[^\"]*\""))))
 
+(defun ceylon-backend-to-command-suffix (backend)
+  "Map ‘native’ BACKEND to suffix for ceylon subcommands.
+This is only necessary because the the JVM backend’s commands are
+called ‘compile’, ‘run’ etc. instead of the more regular
+‘compile-jvm’, ‘run-jvm’."
+  (if (equal backend "jvm")
+      ""
+    (concat "-" backend)))
+
 ;;;###autoload (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
 ;;;###autoload

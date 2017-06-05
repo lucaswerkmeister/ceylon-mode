@@ -87,3 +87,16 @@
   "Test ‘ceylon-backends’ on a module descriptor with no ‘native’ annotation, but some ‘native’ imports."
   (should (equal (list)
                  (ceylon-backends "trees/native-imports/source/ni/run.ceylon"))))
+
+(ert-deftest ceylon-backend-to-command-suffix-jvm-test ()
+  "Test ‘ceylon-backend-to-command-suffix’ for ‘jvm’."
+  (should (equal "compile"
+                 (concat "compile" (ceylon-backend-to-command-suffix "jvm")))))
+(ert-deftest ceylon-backend-to-command-suffix-js-test ()
+  "Test ‘ceylon-backend-to-command-suffix’ for ‘js’."
+  (should (equal "compile-js"
+                 (concat "compile" (ceylon-backend-to-command-suffix "js")))))
+(ert-deftest ceylon-backend-to-command-suffix-dart-test ()
+  "Test ‘ceylon-backend-to-command-suffix’ for ‘dart’."
+  (should (equal "compile-dart"
+                 (concat "compile" (ceylon-backend-to-command-suffix "dart")))))
