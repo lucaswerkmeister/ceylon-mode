@@ -206,6 +206,13 @@ for ‘module.ceylon’ at and defaults to the current directory."
         (when (re-search-forward regexp nil t)
           (match-string 1))))))
 
+(defun ceylon-module-name (&optional path)
+  "Determine the Ceylon module name.
+
+Optional argument PATH describes the location to start the search
+for ‘module.ceylon’ at and defaults to the current directory."
+  (ceylon-module-descriptor-regexp "\\_<module\\_>\\s-*\\(\\(?:\\w\\|\\s_\\)+\\(?:\\.\\(?:\\w\\|\\s_\\)+\\)*\\)" (or path ".")))
+
 (defun ceylon-source-directory (&optional path)
   "Locate the Ceylon source code directory.
 
@@ -213,7 +220,7 @@ Optional argument PATH describes the location to start the search
 at and defaults to the current directory."
   (unless path (setq path "."))
   (let ((module-directory (locate-dominating-file path "module.ceylon"))
-        (module-name (ceylon-module-descriptor-regexp "\\_<module\\_>\\s-*\\(\\(?:\\w\\|\\s_\\)+\\(?:\\.\\(?:\\w\\|\\s_\\)+\\)*\\)" path))
+        (module-name (ceylon-module-name path))
         ;; declare local variables for use below
         module-name-parts source-directory)
     (when (and module-directory module-name)

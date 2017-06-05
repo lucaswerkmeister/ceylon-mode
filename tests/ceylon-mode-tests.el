@@ -25,6 +25,15 @@
                    (replace-regexp-in-string "\n" "" (buffer-string)))
                  (ceylon-module-descriptor-regexp "^\\(.*\\)$" "trees/simple-without-config/source/simple/run.ceylon"))))
 
+(ert-deftest ceylon-module-name-simple-test ()
+  "Test ‘ceylon-module-name’ on a module with a single name component."
+  (should (equal "simple"
+                 (ceylon-module-name "trees/simple-without-config/source/simple/run.ceylon"))))
+(ert-deftest ceylon-module-name-example-mod-test ()
+  "Test ‘ceylon-module-name’ on a module with two name components."
+  (should (equal "example.mod"
+                 (ceylon-module-name "trees/example.mod-without-config/source/example/mod/run.ceylon"))))
+
 (ert-deftest ceylon-source-directory-simple-test ()
   "Test ‘ceylon-source-directory’ on a module with a single name component."
   (should (path-equal "trees/simple-without-config/source/"
