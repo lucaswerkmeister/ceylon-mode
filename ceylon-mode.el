@@ -272,6 +272,39 @@ called ‘compile’, ‘run’ etc. instead of the more regular
       ""
     (concat "-" backend)))
 
+(defcustom ceylon-default-backend "jvm"
+  "The default Ceylon backend used if a module has no ‘native’ annotation."
+  :type '(choice (const :tag "JVM" "jvm")
+                 (const :tag "JavaScript" "js")
+                 (const :tag "Dart" "dart")))
+
+(defun ceylon-compile (&optional path)
+  "Compile the current Ceylon module.
+Compiler output goes to the buffer ‘*compilation*’.
+Uses the first backend that the module is meant for (see
+‘ceylon-backends’), falling back to ‘ceylon-default-backend’ if no
+‘native’ annotations can be found.
+
+Optional argument PATH describes the location to start the search
+for the module descriptor and project directories at and defaults
+to the current directory."
+  (interactive)
+  (unless path (setq path "."))
+  (let* ((backends (ceylon-backends path))
+         (backend (car (append backends (list ceylon-default-backend))))
+         (module-name (or (ceylon-module-name path) "default"))
+         (default-directory (or (ceylon-project-directory path) "."))
+         (source-directory (or (ceylon-source-directory path) "."))
+         (compilation-buffer (get-buffer-create "*compilation*")))
+    (make-process
+     :name "Ceylon compilation"
+     :command (list "ceylon" (concat "compile" (ceylon-backend-to-command-suffix backend)) "--source" source-directory module-name)
+     :buffer compilation-buffer
+     :noquery t)
+    (with-current-buffer compilation-buffer
+      (compilation-mode))
+    (display-buffer compilation-buffer)))
+
 ;;;###autoload (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
 ;;;###autoload
@@ -284,6 +317,7 @@ called ‘compile’, ‘run’ etc. instead of the more regular
 
 
 (define-key ceylon-mode-map "\C-c\C-f" 'ceylon-format-region-or-buffer)
+(define-key ceylon-mode-map "\C-c\C-c" 'ceylon-compile)
 
 
 (provide 'ceylon-mode)
