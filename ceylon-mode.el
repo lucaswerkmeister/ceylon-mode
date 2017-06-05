@@ -244,6 +244,18 @@ at and defaults to the current directory."
         (when source-directory
           (file-name-directory (directory-file-name source-directory)))))))
 
+(defun ceylon-backends (&optional path)
+  "Detect the Ceylon backend(s) of the current module.
+Returns a list of backend strings, or nil if the backends could not be determined
+(due to error, or because the module is available for all Ceylon backends).
+
+Optional argument PATH describes the location to start the search
+for ‘module.ceylon’ at and defaults to the current directory."
+  ;; heuristic: native annotation on unindented line
+  (let ((native-annotation (ceylon-module-descriptor-regexp "^\\(?:native\\|[a-z].*\\_<native\\)\\s-*(\\s-*\"\\([^)]*\\)\")" (or path "."))))
+    (when native-annotation
+      (split-string native-annotation "\"[^\"]*\""))))
+
 ;;;###autoload (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
 ;;;###autoload

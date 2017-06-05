@@ -57,3 +57,24 @@
   "Test ‘ceylon-project-directory’ on a project with a Maven-like layout and a ‘.ceylon/config’ file."
   (should (path-equal "trees/example.mvn.mod-with-config/"
                       (ceylon-project-directory "trees/example.mvn.mod-with-config/src/main/ceylon/example/mvn/mod/run.ceylon"))))
+
+(ert-deftest ceylon-backends-jvm-own-line-test ()
+  "Test ‘ceylon-backends’ on a module descriptor with the ‘native (\"jvm\")’ annotation on a separate line."
+  (should (equal (list "jvm")
+                 (ceylon-backends "trees/jvm-own-line/source/jol/run.ceylon"))))
+(ert-deftest ceylon-backends-js-inline-test ()
+  "Test ‘ceylon-backends’ on a module descriptor with the ‘native (\"js\")’ annotation between other annotations."
+  (should (equal (list "js")
+                 (ceylon-backends "trees/js-inline/source/jil/run.ceylon"))))
+(ert-deftest ceylon-backends-dart+other-start-line-test ()
+  "Test ‘ceylon-backends’ on a module descriptor with the ‘native (\"dart\", \"other\")’ annotation at the beginning of the ‘module’ line."
+  (should (equal (list "dart" "other")
+                 (ceylon-backends "trees/dart+other-start-line/source/dosl/run.ceylon"))))
+(ert-deftest ceylon-backends-nil-test ()
+  "Test ‘ceylon-backends’ on a module descriptor with no ‘native’ annotation."
+  (should (equal (list)
+                 (ceylon-backends "trees/simple-without-config/source/simple/run.ceylon"))))
+(ert-deftest ceylon-backends-native-imports-test ()
+  "Test ‘ceylon-backends’ on a module descriptor with no ‘native’ annotation, but some ‘native’ imports."
+  (should (equal (list)
+                 (ceylon-backends "trees/native-imports/source/ni/run.ceylon"))))
