@@ -305,6 +305,35 @@ to the current directory."
       (compilation-mode))
     (display-buffer compilation-buffer)))
 
+(defun ceylon-run (&optional path)
+  "Run the current Ceylon module (compiling it if needed).
+Program output goes to the buffer ‘*Ceylon program output*’.
+Uses the first backend that the module is meant for (see
+‘ceylon-backends’), falling back to ‘ceylon-default-backend’ if no
+‘native’ annotations can be found.
+
+Optional argument PATH describes the location to start the search
+for the module descriptor and project directories at and defaults
+to the current directory."
+  (interactive)
+  (unless path (setq path "."))
+  (let* ((backends (ceylon-backends path))
+         (backend (car (append backends (list ceylon-default-backend))))
+         (module-name (or (ceylon-module-name path) "default"))
+         (default-directory (or (ceylon-project-directory path) "."))
+         (source-directory (or (ceylon-source-directory path) "."))
+         (run-buffer (get-buffer-create "*Ceylon program output*")))
+    (if (and (equal module-name "default") (equal source-directory "."))
+        ;; --compile-check doesn’t work in this setup, let’s compile
+        ;; unconditionally and quietly because it’s probably cheap
+        (call-process "ceylon" nil "*compilation*" nil (concat "compile" (ceylon-backend-to-command-suffix backend)) "--source" source-directory module-name))
+    (make-process
+     :name "Ceylon run"
+     :command (list "ceylon" (concat "run" (ceylon-backend-to-command-suffix backend)) "--compile=check" module-name)
+     :buffer run-buffer
+     :noquery t)
+    (display-buffer run-buffer)))
+
 ;;;###autoload (add-to-list 'auto-mode-alist '("\\.ceylon\\'" . ceylon-mode))
 
 ;;;###autoload
@@ -318,6 +347,7 @@ to the current directory."
 
 (define-key ceylon-mode-map "\C-c\C-f" 'ceylon-format-region-or-buffer)
 (define-key ceylon-mode-map "\C-c\C-c" 'ceylon-compile)
+(define-key ceylon-mode-map "\C-c\C-r" 'ceylon-run)
 
 
 (provide 'ceylon-mode)
