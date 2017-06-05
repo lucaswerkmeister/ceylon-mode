@@ -152,7 +152,8 @@ complete declarations."
          ;; declare local variable for use below
          lines)
     ;; pipe region through ceylon.formatter
-    (shell-command-on-region region-beginning region-end "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+    (let ((default-directory (or (ceylon-project-directory) ".")))
+      (shell-command-on-region region-beginning region-end "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t))
     ;; remember updated region
     (setq region-beginning (region-beginning)
           region-end (region-end)
@@ -180,7 +181,8 @@ complete declarations."
   ;; save point
   (let ((point (point)))
     ;; pipe buffer through ceylon.formatter
-    (shell-command-on-region (point-min) (point-max) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t)
+    (let ((default-directory (or (ceylon-project-directory) ".")))
+      (shell-command-on-region (point-min) (point-max) "ceylon format --pipe" t t (get-buffer-create "*ceylon-format-errors*") t))
     ;; restore point (it won't be in the same logical code position, but it's better than nothing)
     (goto-char point)))
 
