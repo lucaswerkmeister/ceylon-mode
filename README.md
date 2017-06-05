@@ -9,7 +9,7 @@ A major [Emacs] mode for editing [Ceylon] code.
 Current status
 --------------
 
-A first version has been released and is good enough for general use in my opinion.
+The mode works, and is good enough for general use in my opinion.
 Development from my side will continue on an on-and-off basis as I find the time to work on it;
 pull requests are always welcome!
 
@@ -18,6 +18,8 @@ Features
 
 - Syntax highlighting
 - Rudimentary indentation
+- Compiling your program (`C-c C-c`)
+- Running your program (`C-c C-r`)
 - Code formatting using [ceylon.formatter] (`C-c C-f`)
 
 Installation

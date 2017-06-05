@@ -5,7 +5,7 @@
 ;; Author: Lucas Werkmeister <mail@lucaswerkmeister.de>
 ;; URL: https://github.com/lucaswerkmeister/ceylon-mode
 ;; Keywords: languages ceylon
-;; Version: 0.1
+;; Version: 0.2
 ;; Package-Requires: ((emacs "24"))
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,8 @@
 ;; Features:
 ;; * syntax highlighting
 ;; * indentation
+;; * compilation
+;; * execution
 ;; * code formatting
 
 ;;; Code:
