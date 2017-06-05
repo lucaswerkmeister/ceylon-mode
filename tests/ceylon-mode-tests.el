@@ -18,6 +18,13 @@
    "     ->   ‘" (expand-file-name actual) "’"))
 (put 'path-equal 'ert-explainer 'path-equal-explainer)
 
+(ert-deftest ceylon-module-descriptor-regexp-test ()
+  "Test ‘ceylon-module-descriptor-regexp’ with a simple match-all regexp."
+  (should (equal (with-temp-buffer
+                   (insert-file-contents "trees/simple-without-config/source/simple/module.ceylon")
+                   (replace-regexp-in-string "\n" "" (buffer-string)))
+                 (ceylon-module-descriptor-regexp "^\\(.*\\)$" "trees/simple-without-config/source/simple/run.ceylon"))))
+
 (ert-deftest ceylon-source-directory-simple-test ()
   "Test ‘ceylon-source-directory’ on a module with a single name component."
   (should (path-equal "trees/simple-without-config/source/"
