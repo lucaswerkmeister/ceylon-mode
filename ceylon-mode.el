@@ -100,7 +100,7 @@
 (defun ceylon-indent-line ()
   "Indent current line as Ceylon code."
   (let* ((cur-column (and ceylon-return-point-on-indent
-			  (current-column))))
+                          (current-column))))
     (beginning-of-line)
 
     (if (bobp) ; beginning of buffer?
