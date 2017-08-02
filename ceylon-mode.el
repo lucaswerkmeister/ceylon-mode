@@ -105,34 +105,54 @@
   "Syntax table for `ceylon-mode'.")
 
 (set-default 'tab-width 4)
+
+(defcustom ceylon-restore-point-on-indent t
+  "Whether to restore point after an indentation.
+
+If this variable is non-nil, restore point to its original position,
+adjusted for changed indentation, after an indentation operation
+completes. This matches the default behavior of most Emacs programming
+modes.
+
+If this variable is nil, leave point at the end of indentation."
+  :type '(choice (const :tag "restore original point" t)
+                 (const :tag "leave point at end of indentation" nil)))
+
 (defun ceylon-indent-line ()
   "Indent current line as Ceylon code."
-  (beginning-of-line)
-  (if (bobp) ; beginning of buffer?
-      (indent-line-to 0)
-    (let (cur-indent)
-      (save-excursion
-        (forward-line -1)
-        (while (and (looking-at "^[ \t]*$") (not (bobp))) ; skip over blank lines
-          (forward-line -1))
-        (setq cur-indent (current-indentation))
-        (let* ((start (line-beginning-position))
-               (end   (line-end-position))
-               (open-parens    (how-many "(" start end))
-               (close-parens   (how-many ")" start end))
-               (open-braces    (how-many "{" start end))
-               (close-braces   (how-many "}" start end))
-               (open-brackets  (how-many "\\[" start end))
-               (close-brackets (how-many "\\]" start end))
-               (balance (- (+ open-parens open-braces open-brackets)
-                           (+ close-parens close-braces close-brackets))))
-          (if (looking-at"[ \t]*\\(}\\|)\\|]\\)")
-              (setq balance (+ balance 1)))
-          (setq cur-indent (+ cur-indent (* balance tab-width)))))
-      (if (looking-at "[ \t]*\\(}\\|)\\|]\\)")
-          (setq cur-indent (- cur-indent tab-width)))
-      (if (>= cur-indent 0)
-          (indent-line-to cur-indent)))))
+  (let* ((cur-column (and ceylon-restore-point-on-indent
+                          (current-column))))
+    (beginning-of-line)
+
+    (if (bobp) ; beginning of buffer?
+        (indent-line-to 0)
+      (let (cur-indent
+            (old-indent (current-indentation)))
+        (save-excursion
+          (forward-line -1)
+          (while (and (looking-at "^[ \t]*$") (not (bobp))) ; skip over blank lines
+            (forward-line -1))
+          (setq cur-indent (current-indentation))
+          (let* ((start (line-beginning-position))
+                 (end   (line-end-position))
+                 (open-parens    (how-many "(" start end))
+                 (close-parens   (how-many ")" start end))
+                 (open-braces    (how-many "{" start end))
+                 (close-braces   (how-many "}" start end))
+                 (open-brackets  (how-many "\\[" start end))
+                 (close-brackets (how-many "\\]" start end))
+                 (balance (- (+ open-parens open-braces open-brackets)
+                             (+ close-parens close-braces close-brackets))))
+            (if (looking-at"[ \t]*\\(}\\|)\\|]\\)")
+                (setq balance (+ balance 1)))
+            (setq cur-indent (+ cur-indent (* balance tab-width)))))
+        (if (looking-at "[ \t]*\\(}\\|)\\|]\\)")
+            (setq cur-indent (- cur-indent tab-width)))
+        (when (>= cur-indent 0)
+          (indent-line-to cur-indent)
+
+          (when (and cur-column (> cur-column old-indent))
+            (move-to-column (+ cur-column (- cur-indent old-indent)))))))))
 ;; uncomment this to automatically reindent when a close-brace is typed;
 ;; however, this also sets the cursor *before* that brace, which is inconvenient,
 ;; so it's disabled for now.
