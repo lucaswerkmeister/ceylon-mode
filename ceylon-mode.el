@@ -99,21 +99,13 @@
 (set-default 'ceylon-return-point-on-indent nil)
 (defun ceylon-indent-line ()
   "Indent current line as Ceylon code."
-  (let* ((cur-column       (and ceylon-return-point-on-indent
-                                (current-column)))
-         (get-line-length  (lambda ()
-                             (- (progn
-                                  (end-of-line)
-                                  (current-column))
-                                (progn
-                                  (beginning-of-line)
-                                  (current-column)))))
-         (orig-line-length (funcall get-line-length)))
+  (let* ((cur-column (and ceylon-return-point-on-indent
+			  (current-column))))
     (beginning-of-line)
 
     (if (bobp) ; beginning of buffer?
         (indent-line-to 0)
-      (let (cur-indent)
+      (let (cur-indent (old-indent (current-indentation)))
         (save-excursion
           (forward-line -1)
           (while (and (looking-at "^[ \t]*$") (not (bobp))) ; skip over blank lines
@@ -137,9 +129,8 @@
         (when (>= cur-indent 0)
           (indent-line-to cur-indent)
 
-          (when (and cur-column (> cur-column cur-indent))
-            (move-to-column (+ cur-column (- (funcall get-line-length)
-                                             orig-line-length)))))))))
+          (when (and cur-column (> cur-column old-indent))
+            (move-to-column (+ cur-column (- cur-indent old-indent)))))))))
 ;; uncomment this to automatically reindent when a close-brace is typed;
 ;; however, this also sets the cursor *before* that brace, which is inconvenient,
 ;; so it's disabled for now.
