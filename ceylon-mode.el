@@ -33,14 +33,14 @@
 ;;; Code:
 
 (defgroup ceylon nil
-  "A coding mode for the Ceylon JVM language."
+  "Major mode for editing Ceylon source code."
 
-  :group   'extensions
-  :group   'convenience
+  :group 'languages
   :version "0.2"
-  :prefix  "ceylon-"
-  :link    '(url-link :tag "Github"
-                           "https://github.com/lucaswerkmeister/ceylon-mode"))
+  :prefix "ceylon-"
+  :link '(url-link :tag "GitHub"
+                   "https://github.com/lucaswerkmeister/ceylon-mode"))
+
 (defconst ceylon-font-lock-string
   (list
    ;; highlighting strings with regexes, because Emacs' proper model (syntax table) isn't flexible enough to suppport string templates or verbatim strings
@@ -104,22 +104,29 @@
     st)
   "Syntax table for `ceylon-mode'.")
 
-(set-default 'tab-width                    4)
-(defcustom   ceylon-return-point-on-indent t
-  "Boolean to set indentation behavior.
+(set-default 'tab-width 4)
 
-A nil value moves the cursor to the end of the indentation upon indent.
-A t   value keeps indentation behavior as is standard in most emacs modes."
-  :type 'boolean)
+(defcustom ceylon-restore-point-on-indent t
+  "Whether to restore point after an indentation.
+
+If this variable is non-nil, restore point to its original position,
+adjusted for changed indentation, after an indentation operation
+completes. This matches the default behavior of most Emacs programming
+modes.
+
+If this variable is nil, leave point at the end of indentation."
+  :type '(choice (const :tag "restore original point" t)
+                 (const :tag "leave point at end of indentation" nil)))
+
 (defun ceylon-indent-line ()
   "Indent current line as Ceylon code."
-  (let* ((cur-column (and ceylon-return-point-on-indent
+  (let* ((cur-column (and ceylon-restore-point-on-indent
                           (current-column))))
     (beginning-of-line)
 
     (if (bobp) ; beginning of buffer?
         (indent-line-to 0)
-      (let ( cur-indent
+      (let (cur-indent
             (old-indent (current-indentation)))
         (save-excursion
           (forward-line -1)
