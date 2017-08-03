@@ -32,6 +32,15 @@
 
 ;;; Code:
 
+(defgroup ceylon nil
+  "A coding mode for the Ceylon JVM language."
+
+  :group   'extensions
+  :group   'convenience
+  :version "0.2"
+  :prefix  "ceylon-"
+  :link    '(url-link :tag "Github"
+                           "https://github.com/lucaswerkmeister/ceylon-mode"))
 (defconst ceylon-font-lock-string
   (list
    ;; highlighting strings with regexes, because Emacs' proper model (syntax table) isn't flexible enough to suppport string templates or verbatim strings
@@ -95,8 +104,13 @@
     st)
   "Syntax table for `ceylon-mode'.")
 
-(set-default 'tab-width                     4)
-(set-default 'ceylon-return-point-on-indent nil)
+(set-default 'tab-width                    4)
+(defcustom   ceylon-return-point-on-indent t
+  "Boolean to set indentation behavior.
+
+A nil value moves the cursor to the end of the indentation upon indent.
+A t   value keeps indentation behavior as is standard in most emacs modes."
+  :type 'boolean)
 (defun ceylon-indent-line ()
   "Indent current line as Ceylon code."
   (let* ((cur-column (and ceylon-return-point-on-indent
@@ -105,7 +119,8 @@
 
     (if (bobp) ; beginning of buffer?
         (indent-line-to 0)
-      (let (cur-indent (old-indent (current-indentation)))
+      (let ( cur-indent
+            (old-indent (current-indentation)))
         (save-excursion
           (forward-line -1)
           (while (and (looking-at "^[ \t]*$") (not (bobp))) ; skip over blank lines
