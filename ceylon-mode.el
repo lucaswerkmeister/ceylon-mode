@@ -32,6 +32,15 @@
 
 ;;; Code:
 
+(defgroup ceylon nil
+  "Major mode for editing Ceylon source code."
+
+  :group 'languages
+  :version "0.2"
+  :prefix "ceylon-"
+  :link '(url-link :tag "GitHub"
+                   "https://github.com/lucaswerkmeister/ceylon-mode"))
+
 (defconst ceylon-font-lock-string
   (list
    ;; highlighting strings with regexes, because Emacs' proper model (syntax table) isn't flexible enough to suppport string templates or verbatim strings
