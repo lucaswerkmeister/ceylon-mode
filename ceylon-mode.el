@@ -6,7 +6,7 @@
 ;; URL: https://github.com/lucaswerkmeister/ceylon-mode
 ;; Keywords: languages ceylon
 ;; Version: 0.2
-;; Package-Requires: ((emacs "24"))
+;; Package-Requires: ((emacs "25"))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU Affero General Public License as published by
