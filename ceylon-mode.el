@@ -126,26 +126,46 @@ If this variable is nil, leave point at the end of indentation."
 
     (if (bobp) ; beginning of buffer?
         (indent-line-to 0)
-      (let (cur-indent
-            (old-indent (current-indentation)))
-        (save-excursion
-          (forward-line -1)
-          (while (and (looking-at "^[ \t]*$") (not (bobp))) ; skip over blank lines
-            (forward-line -1))
-          (setq cur-indent (current-indentation))
-          (let* ((start (line-beginning-position))
-                 (end   (line-end-position))
-                 (open-parens    (how-many "(" start end))
-                 (close-parens   (how-many ")" start end))
-                 (open-braces    (how-many "{" start end))
-                 (close-braces   (how-many "}" start end))
-                 (open-brackets  (how-many "\\[" start end))
-                 (close-brackets (how-many "\\]" start end))
-                 (balance (- (+ open-parens open-braces open-brackets)
-                             (+ close-parens close-braces close-brackets))))
-            (if (looking-at"[ \t]*\\(}\\|)\\|]\\)")
-                (setq balance (+ balance 1)))
-            (setq cur-indent (+ cur-indent (* balance tab-width)))))
+      (let (preceding-text
+            cur-indent
+            (old-indent (current-indentation))
+            (number-of-double-quotes 0)
+            (regexp-search-string "[^\\]\""))
+        (copy-region-as-kill (point-min) (point))
+
+        (setq preceding-text (car kill-ring))
+        (setq kill-ring      (cdr kill-ring))
+
+        (while (string-match regexp-search-string preceding-text)
+          (setq preceding-text
+                (substring preceding-text
+                           (1+ (string-match regexp-search-string
+                                             preceding-text))))
+          (setq number-of-double-quotes (1+ number-of-double-quotes)))
+
+        (if (= (mod number-of-double-quotes 2) 1)
+            (save-excursion
+              (re-search-backward regexp-search-string)
+              (forward-char)
+              (setq cur-indent (1+ (current-column))))
+          (save-excursion
+            (forward-line -1)
+            (while (and (looking-at "^[ \t]*$") (not (bobp))) ; skip over blank lines
+              (forward-line -1))
+            (setq cur-indent (current-indentation))
+            (let* ((start (line-beginning-position))
+                   (end   (line-end-position))
+                   (open-parens    (how-many "(" start end))
+                   (close-parens   (how-many ")" start end))
+                   (open-braces    (how-many "{" start end))
+                   (close-braces   (how-many "}" start end))
+                   (open-brackets  (how-many "\\[" start end))
+                   (close-brackets (how-many "\\]" start end))
+                   (balance (- (+ open-parens open-braces open-brackets)
+                               (+ close-parens close-braces close-brackets))))
+              (if (looking-at"[ \t]*\\(}\\|)\\|]\\)")
+                  (setq balance (+ balance 1)))
+              (setq cur-indent (+ cur-indent (* balance tab-width))))))
         (if (looking-at "[ \t]*\\(}\\|)\\|]\\)")
             (setq cur-indent (- cur-indent tab-width)))
         (when (>= cur-indent 0)
