@@ -90,6 +90,7 @@
 (defvar ceylon-font-lock ceylon-font-lock-all ; e. g. set to ceylon-font-lock-keywords to only highlight keywords
   "Syntax highlighting for Ceylon; customizable (highlights all by default).")
 
+(set-default 'comment-start "// ")
 (defvar ceylon-mode-syntax-table
   (let ((st (make-syntax-table)))
     ;; Comments. See (elisp) Syntax Flags.
