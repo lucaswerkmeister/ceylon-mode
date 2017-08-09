@@ -106,6 +106,8 @@
 
 (set-default 'tab-width 4)
 
+(set-default 'comment-start "// ")
+
 (defcustom ceylon-restore-point-on-indent t
   "Whether to restore point after an indentation.
 
