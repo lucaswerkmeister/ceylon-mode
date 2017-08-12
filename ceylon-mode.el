@@ -81,8 +81,8 @@
   "Syntax highlighting for Ceylon lowercase identifiers.")
 (defconst ceylon-font-lock-uidentifier
   (list
-   '("\\<\\([[:upper:]][[:alnum:]_]*\\)\\>" . font-lock-type-face)
-   '("\\<\\(\\\\I[[:alnum:]_]*\\)\\>" . font-lock-type-face))
+   '("\\<\\([[:upper:]][[:alnum:]_]*\\)\\>\\??" . font-lock-type-face)
+   '("\\<\\(\\\\I[[:alnum:]_]*\\)\\>\\??" . font-lock-type-face))
   "Syntax highlighting for Ceylon uppercase identifiers.")
 (defconst ceylon-font-lock-all
   (append ceylon-font-lock-string ceylon-font-lock-keywords ceylon-font-lock-language-annos ceylon-font-lock-doc-annos ceylon-font-lock-lidentifier ceylon-font-lock-uidentifier)
